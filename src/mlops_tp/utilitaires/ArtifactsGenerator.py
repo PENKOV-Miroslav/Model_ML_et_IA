@@ -57,10 +57,25 @@ class ArtifactsGenerator:
             json.dump(feature_schema, f, indent=4, ensure_ascii=False)
         return path
 
-    def save_run_info(self, run_info: Dict[str, Any], filename: str = 'run_info.json') -> Path:
+    def save_run_info(self, df_train, df_val, df_test, target_column: str,
+         train_size, val_size, test_size, random_state, filename: str = 'run_info.json'
+    ) -> Path:
         """Écrit les informations d'exécution dans `run_info.json` et ajoute un timestamp."""
-        run_info = dict(run_info) if run_info is not None else {}
-        run_info['timestamp'] = datetime.now().isoformat()
+
+        run_info = {
+            "dataset_name": "University Query Priority Classification",
+            "train_shape": f"Row: {df_train.shape[0]} Columns: {df_train.shape[1]}",
+            "val_shape": f"Row: {df_val.shape[0]} Columns: {df_val.shape[1]}",
+            "test_shape": f"Row: {df_test.shape[0]} Columns: {df_test.shape[1]}",
+            "target_column": target_column,
+            "train_size": float(train_size),
+            "val_size": float(val_size),
+            "test_size": float(test_size),
+            "random_state": random_state,
+            "classes": df_train[target_column].unique().tolist(),
+            "timestamp": datetime.now().isoformat()
+        }
+
         path = self.output_dir / filename
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(run_info, f, indent=4, ensure_ascii=False)
@@ -84,5 +99,5 @@ class ArtifactsGenerator:
         if feature_schema is not None:
             results['feature_schema'] = self.save_feature_schema(feature_schema)
         if run_info is not None:
-            results['run_info'] = self.save_run_info(run_info)
+            results['run_info'] = self.save_run_info(**run_info)
         return results
