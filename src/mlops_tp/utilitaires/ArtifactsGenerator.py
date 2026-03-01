@@ -25,8 +25,8 @@ class ArtifactsGenerator:
         au niveau du package `src/mlops_tp/artifacts`.
         """
         if output_dir is None:
-            # fichier actuel: src/mlops_tp/utilitaires/ArtifactsGenerator.py
-            # target artifacts folder: src/mlops_tp/artifacts
+            # fichier actuele: src/mlops_tp/utilitaires/ArtifactsGenerator.py
+            # target dossier artifacts: src/mlops_tp/artifacts
             default_artifacts = Path(__file__).resolve().parent.parent / 'artifacts'
             self.output_dir = default_artifacts
         else:
@@ -40,7 +40,7 @@ class ArtifactsGenerator:
             RuntimeError: si `joblib` n'est pas disponible.
         """
         if joblib_dump is None:
-            raise RuntimeError('joblib is not available. Install joblib to save models.')
+            raise RuntimeError('joblib est indisponible. Installer joblib pour effectuer la sauvegarde du modèle.')
         path = self.output_dir / filename
         joblib_dump(model, path)
         return path
