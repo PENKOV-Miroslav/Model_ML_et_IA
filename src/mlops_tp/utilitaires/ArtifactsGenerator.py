@@ -62,15 +62,28 @@ class ArtifactsGenerator:
     ) -> Path:
         """Écrit les informations d'exécution dans `run_info.json` et ajoute un timestamp."""
 
+            # Pourcentages par rapport au train total
+        train_total_rows = len(df_train) + len(df_val)
+        train_info = f"{len(df_train)} ({len(df_train)/train_total_rows*100:.0f}%)"
+        val_info = f"{len(df_val)} ({len(df_val)/train_total_rows*100:.0f}%)"
+
+            # Pourcentage du test par rapport au dataset complet
+        dataset_total_rows = train_total_rows + len(df_test)
+        test_info = f"{len(df_test)} ({len(df_test)/dataset_total_rows*100:.1f}%)"
+
         run_info = {
-            "dataset_name": "University Query Priority Classification",
+            "dataset_name": "University Query Priority Classification / Classification d'urgence des requêtes universitaires",
+            "columns_names": f" Columns Names: {df_train.columns.tolist()}",
             "train_shape": f"Row: {df_train.shape[0]} Columns: {df_train.shape[1]}",
             "val_shape": f"Row: {df_val.shape[0]} Columns: {df_val.shape[1]}",
-            "test_shape": f"Row: {df_test.shape[0]} Columns: {df_test.shape[1]}",
+            "test_shape": f"Row: {df_test.shape[0]} Columns: {df_test.shape[1]} ",
             "target_column": target_column,
             "train_size": float(train_size),
-            "val_size": float(val_size),
+            "train_size_percentage": train_info,
+            "val_size": float(val_size,),
+            "val_size_percentage":val_info,
             "test_size": float(test_size),
+            "test_size_percentage": test_info,
             "random_state": random_state,
             "classes": df_train[target_column].unique().tolist(),
             "timestamp": datetime.now().isoformat()
