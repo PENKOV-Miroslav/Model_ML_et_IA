@@ -2,22 +2,20 @@ import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
+from joblib import dump as joblib_dump
 
-try:
-    from joblib import dump as joblib_dump
-except Exception:  # pragma: no cover - joblib may be absent in some environments
-    joblib_dump = None
 
 
 class ArtifactsGenerator:
-    """Classe utilitaire pour générer et sauvegarder des artefacts de run.
-
-    Méthodes principales:
-    - save_model: sauvegarde un objet modèle au format joblib (`model.joblib`).
-    - save_metrics: écrit un dictionnaire de métriques dans `metrics.json`.
-    - save_feature_schema: écrit un schéma de features dans `feature_schema.json`.
-    - save_run_info: écrit les informations d'exécution dans `run_info.json` (utilise `gen_run_info_json`).
-    - generate_all: exécute toutes les sauvegardes demandées selon les paramètres fournis.
+            
+    """
+        Classe utilitaire pour générer et sauvegarder des artefacts de run.
+                    Méthodes principales:
+                        - save_model: sauvegarde un objet modèle au format joblib (`model.joblib`).
+                        - save_metrics: écrit un dictionnaire de métriques dans `metrics.json`.
+                        - save_feature_schema: écrit un schéma de features dans `feature_schema.json`.
+                        - save_run_info: écrit les informations d'exécution dans `run_info.json` (utilise `gen_run_info_json`).
+                        - generate_all: exécute toutes les sauvegardes demandées selon les paramètres fournis.
     """
 
     def __init__(self, output_dir: Optional[Path] = None):
