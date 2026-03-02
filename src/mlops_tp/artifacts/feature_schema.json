@@ -1,9 +1,11 @@
 {
     "numerical_features": [
-        "Days_To_Deadline"
+        "Days_To_Deadline",
+        "Query_ID"
     ],
     "categorical_features": [
-        "Department"
+        "Department",
+        "Student_Query"
     ],
     "target_column": "Priority_Label"
 }

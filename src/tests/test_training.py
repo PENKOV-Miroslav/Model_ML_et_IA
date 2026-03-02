@@ -8,6 +8,7 @@ from mlops_tp.utilitaires.ArtifactsGenerator import ArtifactsGenerator
 from mlops_tp.pipline import PipelineModel
 from sklearn.pipeline import Pipeline
 
+
 def test_training_generates_model(tmp_path):
     # Charger données
     trainer = Train()
