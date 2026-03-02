@@ -124,6 +124,19 @@ if __name__ == "__main__":
     artifacts.save_metrics(metrics)
 
     # -------------------------------
+    # Génération du feature_schema.json
+    # -------------------------------
+
+    feature_schema = {
+        "numerical_features": numeric_features,
+        "categorical_features": categorical_features,
+        "target_column": TARGET_COLUMN
+    }
+
+    # Sauvegarder feature_schema.json
+    artifacts.save_feature_schema(feature_schema)
+
+    # -------------------------------
     # Afficher les métriques
     # -------------------------------
     print("Métriques Validation:", val_accuracy, val_f1)

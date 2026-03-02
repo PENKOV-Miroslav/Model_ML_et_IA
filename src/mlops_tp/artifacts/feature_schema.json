@@ -1,0 +1,9 @@
+{
+    "numerical_features": [
+        "Days_To_Deadline"
+    ],
+    "categorical_features": [
+        "Department"
+    ],
+    "target_column": "Priority_Label"
+}
