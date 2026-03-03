@@ -1,4 +1,5 @@
 # src/mlops_tp/api.py
+import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
@@ -66,11 +67,15 @@ def metadata():
 # ----------------------------------
 @app.post("/predict")
 def predict(data: PredictionInput):
+
     # Convertir en dictionnaire
     input_dict = data.model_dump()
 
-    # Faire la prédiction (mettre sous forme de liste pour sklearn)
-    prediction = model.predict([input_dict])[0]
+    # Convertir en DataFrame (IMPORTANT)
+    input_df = pd.DataFrame([input_dict])
+
+    # Prédiction
+    prediction = model.predict(input_df)[0]
 
     return {
         "input": input_dict,
