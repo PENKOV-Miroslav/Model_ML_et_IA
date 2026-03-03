@@ -35,3 +35,8 @@ La taille globale est de 6 000 requêtes d'étudiants universitaires étiquetée
 # V - Source dataset
 
 * https://www.kaggle.com/datasets/coderanand/university-query-priority-classification?select=university_query_test.csv
+
+
+# evelment a faire :
+ streamlit des donnée analyse univariée,bi-variée du fichier train.csv
+ faire le fichier docker container de l'application
