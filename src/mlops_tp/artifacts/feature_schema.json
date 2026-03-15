@@ -1,11 +1,13 @@
 {
     "numerical_features": [
-        "Days_To_Deadline",
-        "Query_ID"
+        "budget_usd",
+        "duration_days",
+        "num_applicants",
+        "freelancer_rating",
+        "completion_time_days"
     ],
     "categorical_features": [
-        "Department",
-        "Student_Query"
+        "category"
     ],
-    "target_column": "Priority_Label"
+    "target_column": "hired"
 }

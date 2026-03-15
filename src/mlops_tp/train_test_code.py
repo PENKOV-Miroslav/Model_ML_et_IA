@@ -10,6 +10,7 @@ from mlops_tp.train import Train
 from mlops_tp.utilitaires.ArtifactsGenerator import ArtifactsGenerator
 from mlops_tp.pipline import PipelineModel
 from mlops_tp.config import (TARGET_COLUMN)
+from mlops_tp.utilitaires.data_validator import DataValidator
 
 if __name__ == "__main__":
 
@@ -17,11 +18,16 @@ if __name__ == "__main__":
     trainer = Train()
     artifacts = ArtifactsGenerator()
 
-    # Charger les données
-    df_train, df_test = trainer.charger_donnee()
+    # Charger les données et validation
+    df_train, df_val, df_test = trainer.charger_donnee()
+    validator = DataValidator(trainer.target_column)
+    validator.validate(df_train)
 
     # Split train -> train + validation
-    X_train, X_val, y_train, y_val = trainer.separation_donnee(df_train)
+    X_train, y_train = trainer.split_features_target(df_train)
+    X_val, y_val = trainer.split_features_target(df_val)
+    X_test, y_test = trainer.split_features_target(df_test)
+    
     Y_validation = y_val.copy()  # Créer une copie de y_val pour la validation
    #y_val = y_val.reset_index(drop=True)  # Réinitialiser les index pour éviter les problèmes de concaténation
 
@@ -30,14 +36,15 @@ if __name__ == "__main__":
     df_val = pd.concat([X_val, y_val], axis=1)
 
     # Calcul des vraies tailles
-    total_rows = len(df_train)
+    total_rows = len(df_train_final) + len(df_val) + len(df_test)
     train_size = len(df_train_final) / total_rows
     val_size = len(df_val) / total_rows
-    test_size = len(df_test) / (len(df_train) + len(df_test))
+    test_size = len(df_test) / total_rows
 
     # Définir les colonnes
-    numeric_features = ["Days_To_Deadline","Query_ID"]
-    categorical_features = ["Department", "Student_Query"]
+    numeric_features = X_train.select_dtypes(include=["int64", "float64"]).columns.tolist()
+    categorical_features = X_train.select_dtypes(include=["object"]).columns.tolist()
+
 
     # Créer le pipeline via la classe PipelineModel
     pipeline_model = PipelineModel()
@@ -102,12 +109,23 @@ if __name__ == "__main__":
     # -------------------------------
     # Afficher les métriques
     # -------------------------------
+    print(X_train.columns)
+    print(df_train.corr(numeric_only=True))
+    print(df_train["hired"].value_counts())
+    print("Features utilisées :")
+    print(X_train.columns.tolist())
+    print(df_train.duplicated().sum())
+    print("Classes target :", y_train.unique())
+    print("Distribution :", y_train.value_counts())
     print("Métriques Validation:", val_accuracy, val_f1)
     print("Métriques Test:", test_accuracy, test_f1)
 
     print("Train size réel:", len(df_train_final))
     print("Validation size réel:", len(df_val))
     print("Test size réel:", len(df_test))
+    print("Accuracy train:", pipeline.score(X_train, y_train))
+    print("Accuracy val:", pipeline.score(X_val, y_val))
+    print("Accuracy test:", pipeline.score(X_test, y_test))
 
     # Sauvegarde des infos de run
     artifacts.save_run_info(

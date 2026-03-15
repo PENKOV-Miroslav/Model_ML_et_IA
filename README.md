@@ -35,8 +35,26 @@ La taille globale est de 6 000 requêtes d'étudiants universitaires étiquetée
 # V - Source dataset
 
 * https://www.kaggle.com/datasets/coderanand/university-query-priority-classification?select=university_query_test.csv
+* https://www.kaggle.com/datasets/emirhanakku/synthetic-freelance-job-platform-dataset?select=synthetic_freelance_jobs.csv
+
+* https://keylabs.ai/blog/understanding-the-f1-score-and-auc-roc-curve/
+
+
 
 
 # evelment a faire :
  streamlit des donnée analyse univariée,bi-variée du fichier train.csv
  faire le fichier docker container de l'application
+
+
+ # test /predict
+ {
+  "features": {
+    "category": "Web Development",
+    "budget_usd": 1500,
+    "duration_days": 30,
+    "num_applicants": 12,
+    "freelancer_rating": 4.7,
+    "completion_time_days": 2
+  }
+}

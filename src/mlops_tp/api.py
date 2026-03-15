@@ -1,83 +1,65 @@
-# src/mlops_tp/api.py
-import pandas as pd
-from fastapi import FastAPI
-from pydantic import BaseModel
-import joblib
 import json
+import time
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
-# ----------------------------------
-# Initialisation API
-# ----------------------------------
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
+
+from src.mlops_tp.inference import InferenceModel
+
+
 app = FastAPI(
-    title="University Query Priority API",
-    version="1.0"
+    title="Generic ML Prediction API",
+    version="1.0.0"
 )
 
-# ----------------------------------
-# Charger artefacts au démarrage
-# ----------------------------------
 BASE_DIR = Path(__file__).resolve().parent
 ARTIFACTS_DIR = BASE_DIR / "artifacts"
 
-model = joblib.load(ARTIFACTS_DIR / "model.joblib")
+inference_model = InferenceModel(artifacts_dir=ARTIFACTS_DIR)
 
-with open(ARTIFACTS_DIR / "feature_schema.json", "r") as f:
+with open(ARTIFACTS_DIR / "feature_schema.json", "r", encoding="utf-8") as f:
     feature_schema = json.load(f)
 
-with open(ARTIFACTS_DIR / "metrics.json", "r") as f:
+with open(ARTIFACTS_DIR / "metrics.json", "r", encoding="utf-8") as f:
     metrics = json.load(f)
 
 
-# ----------------------------------
-# Modèle d'entrée pour /predict
-# ----------------------------------
 class PredictionInput(BaseModel):
-    Query_ID: int
-    Student_Query: str
-    Department: str
-    Days_To_Deadline: int
+    features: Dict[str, Any] = Field(..., description="Variables d'entrée du modèle")
 
 
-# ----------------------------------
-# 1️⃣ Health Check
-# ----------------------------------
 @app.get("/health")
 def health():
-    return {"status": "API is running"}
+    return {"status": "ok"}
 
 
-# ----------------------------------
-# 2️⃣ Metadata
-# ----------------------------------
 @app.get("/metadata")
 def metadata():
     return {
-        "model_version": "1.0",
+        "model_version": "1.0.0",
         "task_type": "classification",
-        "features": feature_schema,
+        "feature_schema": feature_schema,
         "validation_accuracy": metrics.get("validation_accuracy"),
-        "test_accuracy": metrics.get("test_accuracy")
+        "test_accuracy": metrics.get("test_accuracy"),
     }
 
 
-# ----------------------------------
-# 3️⃣ Prediction
-# ----------------------------------
 @app.post("/predict")
 def predict(data: PredictionInput):
+    start = time.perf_counter()
 
-    # Convertir en dictionnaire
-    input_dict = data.model_dump()
+    try:
+        result = inference_model.predict_with_details(data.features)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur d'inférence : {str(e)}")
 
-    # Convertir en DataFrame (IMPORTANT)
-    input_df = pd.DataFrame([input_dict])
+    latency_ms = round((time.perf_counter() - start) * 1000, 3)
 
-    # Prédiction
-    prediction = model.predict(input_df)[0]
+    result["model_version"] = "1.0.0"
+    result["latency_ms"] = latency_ms
 
-    return {
-        "input": input_dict,
-        "prediction": prediction
-    }
+    return result

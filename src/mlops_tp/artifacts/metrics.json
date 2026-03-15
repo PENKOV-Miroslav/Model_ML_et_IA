@@ -1,9 +1,9 @@
 {
-    "validation_accuracy": 1.0,
-    "validation_f1_score": 1.0,
-    "test_accuracy": 1.0,
-    "test_f1_score": 1.0,
-    "timestamp": "2026-03-03T23:48:02.448994",
+    "validation_accuracy": 0.9933333333333333,
+    "validation_f1_score": 0.9933549887285443,
+    "test_accuracy": 0.9933333333333333,
+    "test_f1_score": 0.9933549887285443,
+    "timestamp": "2026-03-15T16:55:36.483816",
     "hyperparameters": {
         "classifier": "RandomForestClassifier",
         "n_estimators": 100,

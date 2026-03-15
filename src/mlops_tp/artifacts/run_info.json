@@ -1,21 +1,20 @@
 {
     "dataset_name": "University Query Priority Classification / Classification d'urgence des requêtes universitaires",
-    "columns_names": " Columns Names: ['Query_ID', 'Student_Query', 'Department', 'Days_To_Deadline', 'Priority_Label']",
-    "train_shape": "Row: 4250 Columns: 5",
-    "val_shape": "Row: 750 Columns: 5",
-    "test_shape": "Row: 1000 Columns: 5 ",
-    "target_column": "Priority_Label",
-    "train_size": 0.85,
-    "train_size_percentage": "4250 (85%)",
+    "columns_names": " Columns Names: ['category', 'budget_usd', 'duration_days', 'num_applicants', 'freelancer_rating', 'completion_time_days', 'hired']",
+    "train_shape": "Row: 700 Columns: 7",
+    "val_shape": "Row: 150 Columns: 7",
+    "test_shape": "Row: 150 Columns: 7 ",
+    "target_column": "hired",
+    "train_size": 0.7,
+    "train_size_percentage": "700 (82%)",
     "val_size": 0.15,
-    "val_size_percentage": "750 (15%)",
-    "test_size": 0.16666666666666666,
-    "test_size_percentage": "1000 (16.7%)",
+    "val_size_percentage": "150 (18%)",
+    "test_size": 0.15,
+    "test_size_percentage": "150 (15.0%)",
     "random_state": 42,
     "classes": [
-        "Low",
-        "High",
-        "Medium"
+        true,
+        false
     ],
-    "timestamp": "2026-03-03T23:48:02.449591"
+    "timestamp": "2026-03-15T16:55:36.503547"
 }
