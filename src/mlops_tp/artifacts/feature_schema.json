@@ -9,5 +9,6 @@
     "categorical_features": [
         "category"
     ],
+    "boolean_features": [],
     "target_column": "hired"
 }

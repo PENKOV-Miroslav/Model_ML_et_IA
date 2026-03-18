@@ -1,20 +1,56 @@
 {
-    "dataset_name": "University Query Priority Classification / Classification d'urgence des requêtes universitaires",
-    "columns_names": " Columns Names: ['category', 'budget_usd', 'duration_days', 'num_applicants', 'freelancer_rating', 'completion_time_days', 'hired']",
-    "train_shape": "Row: 700 Columns: 7",
-    "val_shape": "Row: 150 Columns: 7",
-    "test_shape": "Row: 150 Columns: 7 ",
+    "dataset_name": "synthetic_freelance_jobs",
+    "timestamp": "2026-03-18T20:20:32.684256",
     "target_column": "hired",
-    "train_size": 0.7,
-    "train_size_percentage": "700 (82%)",
-    "val_size": 0.15,
-    "val_size_percentage": "150 (18%)",
-    "test_size": 0.15,
-    "test_size_percentage": "150 (15.0%)",
     "random_state": 42,
+    "columns_names": [
+        "category",
+        "budget_usd",
+        "duration_days",
+        "num_applicants",
+        "freelancer_rating",
+        "completion_time_days",
+        "hired"
+    ],
+    "train_shape": {
+        "rows": 700,
+        "columns": 7
+    },
+    "val_shape": {
+        "rows": 150,
+        "columns": 7
+    },
+    "test_shape": {
+        "rows": 150,
+        "columns": 7
+    },
+    "split": {
+        "train_size": 0.7,
+        "val_size": 0.15,
+        "test_size": 0.15,
+        "train_rows": 700,
+        "val_rows": 150,
+        "test_rows": 150,
+        "train_percentage_in_train_val": 82.35,
+        "val_percentage_in_train_val": 17.65,
+        "test_percentage_global": 15.0
+    },
+    "features_info": {
+        "nombre_total_features": 6,
+        "numerical_features": [
+            "budget_usd",
+            "duration_days",
+            "num_applicants",
+            "freelancer_rating",
+            "completion_time_days"
+        ],
+        "categorical_features": [
+            "category"
+        ],
+        "boolean_features": []
+    },
     "classes": [
         true,
         false
-    ],
-    "timestamp": "2026-03-15T16:55:36.503547"
+    ]
 }
