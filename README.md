@@ -233,3 +233,23 @@ Par exemple, certains runs peuvent obtenir une accuracy légèrement plus élev�
 J’ai donc constaté qu’il existe un compromis entre la performance globale du modèle et sa capacité à rester équilibré sur l’ensemble des prédictions. C’est pour cette raison que j’ai comparé plusieurs métriques en même temps.
 
 28. À ce stade, je retiendrais la configuration qui offre les meilleurs résultats de manière globale sur l’accuracy, le F1-score et la ROC AUC, tout en restant stable entre la validation et le test. Dans mon projet, je privilégierais donc le run qui présente le meilleur compromis entre ces trois métriques, plutôt que celui qui est seulement meilleur sur un seul indicateur. Si les résultats confirment qu’un modèle comme le RandomForestClassifier obtient les scores les plus solides et les plus réguliers, c’est cette configuration que je conserverais pour la suite du projet. Mais je pourrais tres bien prendre aussi un ExtraTreesClassifier ou un GradientBoostingClassifier qui montre des performance identique. Par contre je ne prendrais pas le LogisticRegression puisque il a de bien mauvais résultats sur auc_roc avec 0.526 c'est un coup sur deux pas très fiable par rapport au autre qui monte entre 0.80 et 0.99.
+
+
+# Réponse Question TP4 CI/CD
+
+## Questions préliminaire
+
+1. Quelle différence faites-vous entre tester localement une application et déployer cette application ?
+Tester localement une application consiste à vérifier son bon fonctionnement sur sa propre machine, dans un environnement que l’on contrôle directement. Déployer une application consiste à la rendre exécutable dans un environnement distant, accessible depuis l’extérieur, avec une configuration portable et reproductible.L’application doit accepter un port via variable d’environnement, écouter sur 0.0.0.0 et ne pas dépendre d’un chemin local propre à la machine de développement.
+
+2. À quoi sert un Dockerfile dans une chaîne CI/CD ?
+Le Dockerfile sert à décrire de manière reproductible comment construire l’image de l’application. Dans une chaîne CI/CD, il permet d’automatiser le build dans un environnement standardisé, identique pour tous, que ce soit en local, dans la CI ou sur la plateforme de déploiement.
+
+3. Pourquoi une application qui fonctionne en local peut-elle échouer une fois déployée ?
+Une application peut fonctionner en local mais échouer une fois déployée si elle dépend d’éléments présents uniquement sur la machine du développeur : chemin local codé en dur, port fixe, fichier absent dans le conteneur, configuration non portable ou secret directement dans le code.
+
+4. Quel est le rôle d’un endpoint /health dans une application déployée ?
+L’endpoint /health sert à vérifier rapidement que l’application est vivante et prête à répondre. Il permet de tester si le service est bien démarré, accessible et opérationnel, aussi bien en local qu’après déploiement.
+
+5. Quelle différence faites-vous entre CI et CD ?
+La CI (Continuous Integration) consiste à automatiser les vérifications à chaque modification du dépôt, par exemple l’installation des dépendances, l’exécution des tests et le build Docker. La CD consiste à automatiser la mise à jour du service après validation du code principal, afin que la version déployée reflète la dernière version validée.
