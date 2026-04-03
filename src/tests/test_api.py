@@ -17,8 +17,8 @@ def client():
 
 def test_health(client):
     response = client.get("/health")
-
-    assert response.status_code == 200
+    # Pour verifier le CI on peut casser le assert suivant en mettant un code 201 puis le faire revenir en 200 pour voir ce que ça fait
+    assert response.status_code == 201
 
     data = response.json()
     assert "status" in data
