@@ -296,6 +296,10 @@ https://model-ml-et-ia-penkov-miroslav.onrender.com
     }'
 ```
 
+```
+curl https://model-ml-et-ia-penkov-miroslav.onrender.com/health
+```
+
 J'obtiens les réponses suivante pour "/health" et "/predict":
 * {"status":"ok"}; <br> <br>
 * {"prediction":true,"task":"classification","proba":{"False":1.3061974119765729e-05,"True":0.9999869380258802},"model_version":"1.0.0","latency_ms":34.064}
@@ -326,3 +330,34 @@ Le déclencheur push exécute le workflow lorsqu’un commit est envoyé sur une
 
 La première étape que je regarde est l’étape marquée en échec dans les logs GitHub Actions. Dans mon cas, j’ai regardé Run pytest, car c’est elle qui avait échoué. Les logs montraient clairement que le test test_health échouait avec assert 200 == 201 ou alors qu'il ne pouvait pas poursuivre le test vu que le module inferance n'etait pas trouvable, ce qui permettait d’identifier immédiatement l’origine du pipeline rouge.
 
+### Partie 3
+
+J'ai éffectuer les changement sur la platforme pour le déploiement automatiquue est l'ai configurer a " After CI check Pass" comme ça on s'assure d'avoir la version la plus stable et robuste de notre application en production.
+
+Lorsque j'éffectue le curl où l'app est déployer j'aubtien le nouveau message avec le status {"status":"ok - cd updated"}
+
+Le service Render étant relié au dépôt GitHub, j’ai utilisé l’approche simple attendue par le TP : la branche main déclenche automatiquement un redéploiement. J’ai modifié volontairement le message retourné par l’endpoint /health, puis j’ai poussé cette modification sur main. Le workflow CI s’est exécuté dans GitHub Actions, puis Render a redéployé automatiquement le service. Après déploiement, l’URL publique renvoyait bien la nouvelle valeur de /health, ce qui confirme que le service en ligne reflète la dernière version validée.
+
+33. Expliquez à quel moment on peut parler de Continuous Deployment et à quel moment on parle plutôt de Continuous Delivery.
+
+On parle de Continuous Deployment lorsque chaque changement validé et fusionné dans la branche principale est automatiquement mis en production sans intervention manuelle. On parle plutôt de Continuous Delivery lorsque le pipeline prépare automatiquement une version prête à être déployée, mais qu’une action humaine reste nécessaire pour déclencher effectivement la mise en production.  Ici, si Render redéploie automatiquement après un push validé sur main, on est dans une logique de Continuous Deployment.
+
+34. Quelles variables d’environnement votre projet devrait-il utiliser ?
+
+Mon projet devrait utiliser au minimum des variables d’environnement qui rendent l’application portable entre le local et la production, sans dépendre de chemins ou de paramètres codés en dur. Dans mon cas, les variables pertinentes sont par exemple PORT, PYTHONPATH, DEFAULT_DATA_PATH et API_BASE_URL. On pourrait aussi prévoir, selon l’évolution du projet, des variables comme MODEL_PATH, LOG_LEVEL ou ENVIRONMENT. Cela correspond à la consigne du TP, qui demande d’éviter un port fixe, un chemin local codé en dur ou des fichiers dépendants de la machine de développement.
+
+35. Lesquelles relèvent de la configuration fonctionnelle ?
+
+Relèvent de la configuration fonctionnelle toutes les variables qui définissent le comportement technique de l’application sans être sensibles. Dans mon projet, cela concerne notamment PORT, PYTHONPATH, DEFAULT_DATA_PATH et API_BASE_URL. Ces valeurs peuvent changer entre l’environnement local, la CI et la production, mais elles ne sont pas confidentielles.
+
+36. Lesquelles relèvent d’un secret ?
+
+Dans mon projet actuel, je n’ai pas nécessairement de secret obligatoire si l’application ne dépend que d’un fichier local et d’une API publique simple. En revanche, relèveraient d’un secret toutes les informations sensibles comme une clé API, un token d’accès, un mot de passe, un identifiant de base de données, ou encore des identifiants de registre Docker. Si plus tard j’ajoute un accès à un service externe, ces informations devraient être stockées comme secrets d’environnement et jamais dans le code.
+
+37. Pourquoi ne faut-il jamais versionner un secret dans le dépôt Git ?
+
+Il ne faut jamais versionner un secret dans Git, car une fois commité, il peut être récupéré dans l’historique du dépôt (il y a plein de robot qui scan github pour des clé APi par exemple), même si on le supprime ensuite du dernier commit. Dans un dépôt partagé ou public, cela peut permettre à un tiers d’accéder à des services, de consommer une API à notre place, de lire ou modifier des données, voire de compromettre tout le déploiement.
+
+38. Que doit contenir un fichier .env local ? Que ne doit-il pas contenir dans un dépôt public ?
+
+Un fichier .env local doit contenir les variables nécessaires pour exécuter le projet sur la machine du développeur, par exemple PORT, PYTHONPATH, DEFAULT_DATA_PATH, API_BASE_URL, et éventuellement des secrets comme une clé API ou un mot de passe si le projet en utilise. En revanche, dans un dépôt public, il ne faut jamais versionner un .env contenant des secrets réels. On peut seulement versionner un fichier d’exemple, par exemple .env.example, avec des noms de variables et des valeurs fictives ou vides. Le dépôt public ne doit donc pas contenir de tokens, de clés API, de mots de passe ni d’identifiants sensibles.
