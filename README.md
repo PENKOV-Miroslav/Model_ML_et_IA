@@ -1,6 +1,6 @@
 Licence Apache 2.0
 
-# I - Contexte
+# I - Contexte de la data set University query
 
 Cet ensemble de données contient 6 000 requêtes d'étudiants universitaires étiquetées par niveau de priorité : Élevé, Moyen et Faible. Il est conçu pour les tâches de classification de texte multi-classes dans le traitement du langage naturel (NLP).
 
@@ -8,18 +8,18 @@ L'ensemble de données simule le soutien universitaire réel et les demandes adm
 
 Ce dataset est interessant puisque il comporte les exigences du TP, une taille raisonable moins de 200 Mb, des données structurer au format CSV,c'est un problème de classification multi-classe.
 
-# II - La Tâche
+# II - La Tâche de la data set University query
 
 Classification
 
-# III - L'antomie des données
+# III - L'antomie des données de la data set University query
 
 * Déséquilibre potentiel des classes entre Élevée, Moyenne et Faible.
 * Données textuelles nécessitant un prétraitement (vectorisation TF-IDF ou embeddings).
 * Risque de data leakage si le split n’est pas stratifié.
 * Hétérogénéité des variables (texte + numérique + catégoriel).
 
-### Types de variables:
+### Types de variables de la data set University query:
 
 * Query_ID – identifiant unique
 * Student_Query – Texte de la demande de l’étudiant
@@ -29,25 +29,63 @@ Classification
 
 La taille globale est de 6 000 requêtes d'étudiants universitaires étiquetées par niveau de priorité séparer en deux jeu de donnée "university_query_train"= 5 000 et "university_query_test" = 1 000
 
-# IV - Les défis anticipés
-* à completer
+# IV - Les défis anticipés de la data set University query
+* Traitement des questions
+* Sont elles générique?
+* La diversité des informations
+* Le model adeccoit à la classification
 
-# V - Source dataset
+# V - Source datasets
 
 * https://www.kaggle.com/datasets/coderanand/university-query-priority-classification?select=university_query_test.csv
 * https://www.kaggle.com/datasets/emirhanakku/synthetic-freelance-job-platform-dataset?select=synthetic_freelance_jobs.csv
 
 * https://keylabs.ai/blog/understanding-the-f1-score-and-auc-roc-curve/
 
+# I_bis - Contexte de la dataset freelance-job-platform
 
+Cet ensemble de données simule une plate-forme d'emploi indépendant avec 1 000 offres d'emploi synthétiques, conçue pour prendre en charge un large éventail de tâches d'apprentissage automatique. Il comprend à la fois des données structurées et non structurées, ce qui le rend adapté aux exercices de PNL, de classification, de régression et d'ingénierie des caractéristiques.
 
+# II_bis - La Tâche de la dataset freelance-job-platform
+Les taches réalisable sont: classification, régression et d'ingénierie des caractéristiques.J'ai choisi la classification pour ce TP.
+
+# III_bis - L'antomie des données de la dataset freelance-job-platform
+
+* Déséquilibre potentiel des classes
+* Risque de data leakage si le split n’est pas stratifié.
+* Hétérogénéité des variables (texte + numérique + catégoriel).
+
+### _bis Types de varaibles de la dataset 
+Structured Features: 
+Job Title: text,
+Job description: Text,
+Includes budget: Float, 
+duration: Int ,
+number of applicants: Int ,
+hire status: boolean ,
+freelancer rating: Float capted from 2.8 to 5,
+completion time: datetime,
+
+Metadata:
+
+Rows: 1,000
+
+Format: CSV
+
+License: CC BY 4.0
+
+# IV_bis - Les défis anticipés de la data set University query
+* Traitement nécessaire?
+* Sont elles générique,unique?
+* La diversité des informations ou des données manquante dans la pipline
+* Le model adeccoit à la classification
 
 # evelment a faire :
  streamlit des donnée analyse univariée,bi-variée du fichier train.csv
  faire le fichier docker container de l'application
 
 
- # test /predict
+ # test /predict dans l'API
  {
   "features": {
     "category": "Web Development",
@@ -118,3 +156,71 @@ La distribution de la cible issue de l'EDA est utile pour comprendre le contexte
 20. La distribution de la cible est produite avant l'entraînement, lors de l'analyse exploratoire. Elle décrit les données d'entrée.
 
 La matrice de confusion et la courbe ROC sont produites après l'entraînement et l'évaluation, une fois que les prédictions "y_test_pred" et les probabilités "y_test_proba" sont disponibles. Elles décrivent les performances du modèle entraîné.
+
+
+21. Oui tout est bien enregistrer et normalement fonctionnel.Voici quelques exemples de test avec different paramétres et model de piplineModel:
+```
+PipelineModel(
+        model_type="gradient_boosting",
+        n_estimators=100,
+        max_depth=10,
+        random_state=20, #si non défini ici par défaut = 42
+        scaler_type="standard", #standard ou minmax
+        numeric_imputer_strategy="mean") # median ou mean
+    pipeline_model.creer_pipeline(X_train)
+```
+```
+PipelineModel(
+  model_type="logistic_regression",
+  scaler_type="minmax",
+  numeric_imputer_strategy="mean") # median ou mean
+```
+```
+PipelineModel(
+model_type="decision_tree",
+max_depth=10)
+```
+```
+PipelineModel(
+  model_type="random_forest",
+  n_estimators=200,
+  max_depth=10,
+  scaler_type="standard",
+  numeric_imputer_strategy="mean"
+  )
+```
+```
+PipelineModel(
+  model_type="gradient_boosting",
+  n_estimators=150)
+```
+
+22. J’ai réalisé plusieurs runs en faisant varier certains éléments du pipeline afin de comparer leur impact sur les performances du modèle.
+Le premier run correspond à une baseline avec un RandomForestClassifier, en gardant la configuration par défaut du projet, notamment le random_state=42 provenant du fichier de configuration.
+Le deuxième run modifie le type de modèle en utilisant une LogisticRegression à la place de la forêt aléatoire. J’ai également utilisé une normalisation MinMaxScaler et une stratégie d’imputation numérique par la moyenne, afin d’avoir une configuration plus adaptée à ce type de modèle linéaire.
+Le troisième run conserve un modèle de type forêt aléatoire, mais modifie certains hyperparamètres, par exemple le nombre d’arbres (n_estimators) et la profondeur maximale (max_depth), pour observer si un modèle plus ou moins complexe améliore les résultats.
+
+23. J’ai choisi ces variations pour comparer à la fois :
+des familles de modèles différentes,l’effet de certains hyperparamètres,l’impact du prétraitement sur la qualité finale.
+La régression logistique est un modèle plus simple, plus rapide et plus interprétable. Elle sert de point de comparaison intéressant avec un modèle d’ensemble comme la forêt aléatoire, qui est en général plus flexible sur des données tabulaires hétérogènes.
+J’ai aussi voulu tester l’impact du scaling et de la méthode d’imputation, car ces choix peuvent influencer fortement les performances, surtout pour les modèles linéaires.
+Enfin, la variation de n_estimators et max_depth permet d’évaluer le compromis entre capacité du modèle, généralisation et risque de surapprentissage.
+
+24. Le run qui me semble le meilleur est celui basé sur le RandomForestClassifier avec un nombre d’arbres plus élevé et une profondeur contrôlée, car il offre le meilleur compromis entre performance et stabilité sur les données de validation et de test. Même si le model 
+GradientBoostingClassifier n'est pas mal aussi rivalisant avec le RandomForestClassifier, par contre a fuire dans notre ça le LogisticRegression le score auc_roc est de 0.526 c'est presque de l'aléatoire donc pas du tout prédictif.
+
+25. Je base mon choix principalement sur trois métriques : l’accuracy, le F1-score et la ROC AUC.
+L’accuracy me permet d’avoir une vision globale du pourcentage de bonnes prédictions réalisées par le modèle.
+Le F1-score est aussi important, car il prend en compte à la fois la precision et le recall, ce qui permet d’avoir une évaluation plus équilibrée du modèle.
+Enfin, la ROC AUC me permet d’analyser la capacité du modèle à bien séparer les classes, indépendamment d’un seuil de décision fixe.
+Je ne me base donc pas sur une seule métrique, mais sur un ensemble d’indicateurs complémentaires afin d’avoir une vision plus fiable des performances réelles du modèle.
+
+26. Oui, j’ai observé qu’un modèle peut être meilleur sur une métrique sans être forcément meilleur sur toutes les autres.
+Par exemple, certains runs peuvent obtenir une accuracy légèrement plus élevée, mais avec un F1-score ou une ROC AUC moins bons. Cela montre qu’un modèle peut bien prédire globalement, tout en étant moins équilibré dans sa capacité à distinguer correctement les classes.
+J’ai donc constaté qu’il existe un compromis entre la performance globale du modèle et sa capacité à rester équilibré sur l’ensemble des prédictions. C’est pour cette raison que j’ai comparé plusieurs métriques en même temps.
+
+27. Oui, j’ai observé qu’un modèle peut être meilleur sur une métrique sans être forcément meilleur sur toutes les autres.
+Par exemple, certains runs peuvent obtenir une accuracy légèrement plus élevée, mais avec un F1-score ou une ROC AUC moins bons. Cela montre qu’un modèle peut bien prédire globalement, tout en étant moins équilibré dans sa capacité à distinguer correctement les classes.
+J’ai donc constaté qu’il existe un compromis entre la performance globale du modèle et sa capacité à rester équilibré sur l’ensemble des prédictions. C’est pour cette raison que j’ai comparé plusieurs métriques en même temps.
+
+28. À ce stade, je retiendrais la configuration qui offre les meilleurs résultats de manière globale sur l’accuracy, le F1-score et la ROC AUC, tout en restant stable entre la validation et le test. Dans mon projet, je privilégierais donc le run qui présente le meilleur compromis entre ces trois métriques, plutôt que celui qui est seulement meilleur sur un seul indicateur. Si les résultats confirment qu’un modèle comme le RandomForestClassifier obtient les scores les plus solides et les plus réguliers, c’est cette configuration que je conserverais pour la suite du projet. Mais je pourrais tres bien prendre aussi un ExtraTreesClassifier ou un GradientBoostingClassifier qui montre des performance identique. Par contre je ne prendrais pas le LogisticRegression puisque il a de bien mauvais résultats sur auc_roc avec 0.526 c'est un coup sur deux pas très fiable par rapport au autre qui monte entre 0.80 et 0.99.

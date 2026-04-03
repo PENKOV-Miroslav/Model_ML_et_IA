@@ -18,7 +18,7 @@ class PipelineModel:
     def __init__(
         self,
         model_type="random_forest", #logistic_regression
-        random_state=None, # 42
+        random_state=None, # par défaut de la config = 42
         n_estimators=100, # 200
         max_depth=None, # 10
         scaler_type="standard", # minmax
