@@ -47,7 +47,7 @@ La taille globale est de 6 000 requêtes d'étudiants universitaires étiquetée
 Cet ensemble de données simule une plate-forme d'emploi indépendant avec 1 000 offres d'emploi synthétiques, conçue pour prendre en charge un large éventail de tâches d'apprentissage automatique. Il comprend à la fois des données structurées et non structurées, ce qui le rend adapté aux exercices de PNL, de classification, de régression et d'ingénierie des caractéristiques.
 
 # II_bis - La Tâche de la dataset freelance-job-platform
-Les taches réalisable sont: classification, régression et d'ingénierie des caractéristiques.J'ai choisi la classification pour ce TP.
+Les taches réalisable sont: classification, régression et d'ingénierie des caractéristiques.J'ai choisi la classification Multiclasse pour ce TP.
 
 # III_bis - L'antomie des données de la dataset freelance-job-platform
 
@@ -73,6 +73,15 @@ Rows: 1,000
 Format: CSV
 
 License: CC BY 4.0
+
+```
+{
+"dataset_shape":[1000,12],
+"numeric_features":["budget_usd","duration_days","num_applicants","freelancer_rating","completion_time_days"],"categorical_features":["job_id","job_title","job_description","category","posted_date"],
+"missing_values_total":586,
+"duplicates":0,
+}
+```
 
 # IV_bis - Les défis anticipés de la data set University query
 * Traitement nécessaire?

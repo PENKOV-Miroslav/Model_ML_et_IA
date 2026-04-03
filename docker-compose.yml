@@ -8,3 +8,16 @@ services:
       - "8000:8000"
     environment:
       PYTHONPATH: /app/src
+
+  streamlit:
+    build: .
+    container_name: mlops_tp_streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      PYTHONPATH: /app/src
+      DEFAULT_DATA_PATH: /app/data/synthetic_freelance_jobs.csv
+      API_BASE_URL: http://api:8000
+    depends_on:
+      - api
+    command: streamlit run /app/src/mlops_tp/streamlit/appStreamlit.py --server.address 0.0.0.0 --server.port 8501

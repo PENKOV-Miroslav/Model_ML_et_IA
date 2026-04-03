@@ -1,41 +1,54 @@
 import streamlit as st
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json
+import sys
 from datetime import datetime
+sys.path.append(str(Path(__file__).resolve().parents[2]))
+from mlops_tp.config import DATA_PATH
+
 
 # =========================================================
 # CONFIGURATION
 # =========================================================
 st.set_page_config(
-    page_title="EDA - MLOps",
+    page_title="Analyse Exploratoire Streamlit - MLOps",
     layout="wide",
     page_icon="📊"
 )
 
-st.title("📊 Analyse Exploratoire Générique")
+st.title("Analyse Exploratoire Générique")
 st.markdown("Application compatible avec n'importe quel fichier CSV.")
 
 # =========================================================
 # UPLOAD DATA
 # =========================================================
-uploaded_file = st.sidebar.file_uploader("📂 Charger un fichier CSV", type=["csv"])
+uploaded_file = st.sidebar.file_uploader("Charger un fichier CSV", type=["csv"], label_visibility="collapsed")
 
 @st.cache_data
 def load_data(file):
     return pd.read_csv(file)
 
-if uploaded_file is None:
-    st.info("Veuillez charger un fichier CSV.")
-    st.stop()
 
-df = load_data(uploaded_file)
+if uploaded_file is not None:
+    df = load_data(uploaded_file)
+    st.success("Fichier charger avec succès")
+else:
+    default_path = Path(DATA_PATH)
 
-# =========================================================
+    if default_path.exists():
+        df = pd.read_csv(default_path)
+        st.info(f"Aucun fichier chargé. Utilisation du fichier par défaut:{default_path}")
+    else:
+        st.error(f"Fichier par défaut introuvable: {default_path}")
+        st.stop()
+
+
+
 # DÉTECTION AUTOMATIQUE DES TYPES
-# =========================================================
 numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
 categorical_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
 bool_cols = df.select_dtypes(include=["bool"]).columns.tolist()
@@ -49,26 +62,23 @@ for col in df.columns:
     except:
         pass
 
-# =========================================================
-# SIDEBAR NAVIGATION
-# =========================================================
+
+# SIDEBAR DE NAVIGATION
 section = st.sidebar.radio(
     "Navigation",
     [
-        "1️⃣ Vue Générale",
-        "2️⃣ Qualité des Données",
-        "3️⃣ Analyse Univariée",
-        "4️⃣ Analyse Bivariée",
-        "5️⃣ Corrélations",
-        "6️⃣ Analyse Cible (ML)",
-        "7️⃣ Rapport MLOps"
+        "1 - Vue Générale",
+        "2 - Qualité des Données",
+        "3 - Analyse Univariée",
+        "4 - Analyse Bivariée",
+        "5 - Corrélations",
+        "6 - Analyse Cible (ML)",
+        "7 - Rapport MLOps"
     ]
 )
 
-# =========================================================
-# 1️⃣ VUE GÉNÉRALE
-# =========================================================
-if section == "1️⃣ Vue Générale":
+# VUE GÉNÉRALE
+if section == "1 - Vue Générale":
 
     col1, col2, col3 = st.columns(3)
     col1.metric("Lignes", df.shape[0])
@@ -85,10 +95,9 @@ if section == "1️⃣ Vue Générale":
     })
     st.dataframe(types_df)
 
-# =========================================================
-# 2️⃣ QUALITÉ DES DONNÉES
-# =========================================================
-elif section == "2️⃣ Qualité des Données":
+
+# QUALITÉ DES DONNÉES
+elif section == "2 - Qualité des Données":
 
     st.subheader("Valeurs manquantes")
     missing = df.isna().sum().sort_values(ascending=False)
@@ -107,10 +116,9 @@ elif section == "2️⃣ Qualité des Données":
             outliers = df[(df[col] < q1 - 1.5 * iqr) | (df[col] > q3 + 1.5 * iqr)]
             st.write(f"{col} → {len(outliers)} outliers")
 
-# =========================================================
-# 3️⃣ ANALYSE UNIVARIÉE
-# =========================================================
-elif section == "3️⃣ Analyse Univariée":
+
+# ANALYSE UNIVARIÉE
+elif section == "3 - Analyse Univariée":
 
     var = st.selectbox("Choisir une variable", df.columns)
 
@@ -127,10 +135,10 @@ elif section == "3️⃣ Analyse Univariée":
         st.pyplot(fig)
         st.write(df[var].value_counts())
 
-# =========================================================
-# 4️⃣ ANALYSE BIVARIÉE
-# =========================================================
-elif section == "4️⃣ Analyse Bivariée":
+
+# ANALYSE BIVARIÉE
+
+elif section == "4 - Analyse Bivariée":
 
     col1, col2 = st.columns(2)
     var1 = col1.selectbox("Variable 1", df.columns)
@@ -149,10 +157,10 @@ elif section == "4️⃣ Analyse Bivariée":
 
     st.pyplot(fig)
 
-# =========================================================
-# 5️⃣ CORRÉLATIONS
-# =========================================================
-elif section == "5️⃣ Corrélations":
+
+# CORRÉLATIONS
+
+elif section == "5 - Corrélations":
 
     if len(numeric_cols) > 1:
         fig, ax = plt.subplots(figsize=(10,6))
@@ -161,10 +169,10 @@ elif section == "5️⃣ Corrélations":
     else:
         st.warning("Pas assez de variables numériques.")
 
-# =========================================================
-# 6️⃣ ANALYSE CIBLE (ML READY)
-# =========================================================
-elif section == "6️⃣ Analyse Cible (ML)":
+
+# ANALYSE CIBLE (ML READY)
+
+elif section == "6 - Analyse Cible (ML)":
 
     target = st.selectbox("Choisir la variable cible", df.columns)
 
@@ -192,9 +200,9 @@ elif section == "6️⃣ Analyse Cible (ML)":
             st.pyplot(fig)
 
 # =========================================================
-# 7️⃣ RAPPORT MLOPS
+# 7️ RAPPORT MLOPS
 # =========================================================
-elif section == "7️⃣ Rapport MLOps":
+elif section == "7 - Rapport MLOps":
 
     st.subheader("Résumé exploitable pour le README")
 
@@ -216,4 +224,4 @@ elif section == "7️⃣ Rapport MLOps":
     )
 
 st.markdown("---")
-st.caption("EDA générique orientée MLOps")
+st.caption("Streamlit PENKOV Miroslav Analyse Générique pour MLOps")
