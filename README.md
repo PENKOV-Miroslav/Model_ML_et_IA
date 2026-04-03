@@ -253,3 +253,22 @@ L’endpoint /health sert à vérifier rapidement que l’application est vivant
 
 5. Quelle différence faites-vous entre CI et CD ?
 La CI (Continuous Integration) consiste à automatiser les vérifications à chaque modification du dépôt, par exemple l’installation des dépendances, l’exécution des tests et le build Docker. La CD consiste à automatiser la mise à jour du service après validation du code principal, afin que la version déployée reflète la dernière version validée.
+
+### Test Curl local avant déploiement
+
+#### Pour la prediction
+```
+  curl -X POST "http://localhost:8000/predict" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "features": {
+        "category": "Web Development",
+        "budget_usd": 1500,
+        "duration_days": 30,
+        "num_applicants": 12,
+        "freelancer_rating": 4.7,
+        "completion_time_days": 2
+      }
+    }'
+```
+Pour le health : curl http://localhost:8000/health 
