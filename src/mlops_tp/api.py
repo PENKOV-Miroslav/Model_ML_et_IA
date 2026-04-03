@@ -6,7 +6,7 @@ from typing import Any, Dict
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from src.mlops_tp.inference import InferenceModel
+from .inference import InferenceModel
 
 
 app = FastAPI(
