@@ -272,3 +272,30 @@ La CI (Continuous Integration) consiste à automatiser les vérifications à cha
     }'
 ```
 Pour le health : curl http://localhost:8000/health 
+
+
+
+* Le projet MLOps est disponible en ligne sur le lien suivant:
+https://model-ml-et-ia-penkov-miroslav.onrender.com
+* Pour voir la documentation https://model-ml-et-ia-penkov-miroslav.onrender.com/docs
+
+
+*** essaie CURL en production: 
+```
+  curl -X POST "https://model-ml-et-ia-penkov-miroslav.onrender.com/predict" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "features": {
+        "category": "Web Development",
+        "budget_usd": 1500,
+        "duration_days": 30,
+        "num_applicants": 12,
+        "freelancer_rating": 4.7,
+        "completion_time_days": 2
+      }
+    }'
+```
+
+J'obtiens les réponses suivante pour "/health" et "/predict":
+* {"status":"ok"}; <br> <br>
+* {"prediction":true,"task":"classification","proba":{"False":1.3061974119765729e-05,"True":0.9999869380258802},"model_version":"1.0.0","latency_ms":34.064}
