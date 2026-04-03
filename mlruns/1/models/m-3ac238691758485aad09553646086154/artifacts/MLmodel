@@ -1,0 +1,24 @@
+artifact_path: "/Users/miroslavpenkov/Documents/MASTER IA 2025-2027/MASTER IA/S2/IA\
+  \ et Ge\u0301nie Logiciel MLOps/TP/Model_ML_et_IA/mlruns/1/models/m-3ac238691758485aad09553646086154/artifacts"
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.14.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-3ac238691758485aad09553646086154
+model_size_bytes: 661552
+model_uuid: m-3ac238691758485aad09553646086154
+prompts: null
+run_id: f3a464ea6e9b45a68c7ba8cbd9ae683b
+utc_time_created: '2026-03-27 08:37:48.529628'

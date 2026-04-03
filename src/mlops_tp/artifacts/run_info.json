@@ -1,6 +1,6 @@
 {
     "dataset_name": "synthetic_freelance_jobs",
-    "timestamp": "2026-03-18T20:20:32.684256",
+    "timestamp": "2026-04-03T17:24:04.757887",
     "target_column": "hired",
     "random_state": 42,
     "columns_names": [

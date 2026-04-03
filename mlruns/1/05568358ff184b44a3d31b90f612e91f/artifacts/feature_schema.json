@@ -1,0 +1,14 @@
+{
+  "numerical_features": [
+    "budget_usd",
+    "duration_days",
+    "num_applicants",
+    "freelancer_rating",
+    "completion_time_days"
+  ],
+  "categorical_features": [
+    "category"
+  ],
+  "boolean_features": [],
+  "target_column": "hired"
+}
