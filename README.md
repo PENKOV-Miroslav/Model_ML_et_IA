@@ -299,3 +299,30 @@ https://model-ml-et-ia-penkov-miroslav.onrender.com
 J'obtiens les réponses suivante pour "/health" et "/predict":
 * {"status":"ok"}; <br> <br>
 * {"prediction":true,"task":"classification","proba":{"False":1.3061974119765729e-05,"True":0.9999869380258802},"model_version":"1.0.0","latency_ms":34.064}
+
+
+Pour vérifier le comportement de la CI en cas d’erreur, j’ai modifié volontairement une assertion dans un test existant (test_health) en remplaçant le code attendu 200 par 201. Le workflow GitHub Actions a alors échoué à l’étape pytest, ce qui a produit un pipeline rouge. Après correction du test, le pipeline est redevenu vert.
+
+
+22. Que signifie un pipeline vert? Que signifie un pipeline rouge?
+
+Un pipeline vert signifie que toutes les étapes automatisées se sont exécutées avec succès : installation des dépendances, exécution des tests et build Docker. Un pipeline rouge signifie qu’au moins une étape a échoué. Dans mon cas, le pipeline est devenu rouge lorsque j’ai volontairement modifié l’assertion du test /health en remplaçant 200 par 201, ce qui a provoqué l’échec de pytest. Ou bien le chemin local dans le fichier api.py de l'inferance puisque src.tp_mlops/inferance n'est pas trouvable: ModuleNotFoundError: No module named 'src' J'ai par la suite mis le module inferance en chemin relative -> "from .inferance import Inferance" et c'est revenu à la normal.
+
+23. Pourquoi exécuter les tests avant le déploiement?
+
+Exécuter les tests avant le déploiement permet de vérifier que l’application fonctionne toujours correctement avant d’envoyer une nouvelle version en ligne. Cela réduit le risque de déployer une application cassée, de propager une régression ou d’exposer une API qui ne répond plus comme prévu.
+
+24. Pourquoi construire l’image Docker dans la CI alors même qu’elle a déjà été testée locale-
+ment?
+
+Construire l’image Docker dans la CI permet de vérifier que le build fonctionne aussi dans un environnement propre, standardisé et indépendant de la machine du développeur. Une image peut fonctionner localement grâce à une configuration implicite ou à des fichiers présents sur le poste, mais échouer ailleurs. Le build dans la CI confirme donc la portabilité réelle de l’application.
+
+25. Quelle différence faites-vous entre push et pull_request comme déclencheurs de work-
+flow?
+
+Le déclencheur push exécute le workflow lorsqu’un commit est envoyé sur une branche. Le déclencheur pull_request exécute le workflow lorsqu’une demande de fusion est ouverte ou mise à jour. push sert donc à vérifier le code envoyé, tandis que pull_request permet de valider les changements avant leur fusion dans la branche principale.
+
+26. Quelle est la première étape que vous regardez lorsqu’un workflow échoue?
+
+La première étape que je regarde est l’étape marquée en échec dans les logs GitHub Actions. Dans mon cas, j’ai regardé Run pytest, car c’est elle qui avait échoué. Les logs montraient clairement que le test test_health échouait avec assert 200 == 201 ou alors qu'il ne pouvait pas poursuivre le test vu que le module inferance n'etait pas trouvable, ce qui permettait d’identifier immédiatement l’origine du pipeline rouge.
+
