@@ -32,7 +32,7 @@ class PredictionInput(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok - cd updated"} # changement du message de réponse de health pour verifier la CD
 
 
 @app.get("/metadata")
