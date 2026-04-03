@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from pathlib import Path
 from typing import Any, Dict
@@ -8,10 +9,18 @@ from pydantic import BaseModel, Field
 
 from .inference import InferenceModel
 
+STREAMLIT_URL = os.getenv("STREAMLIT_URL", "http://localhost:8501")
 
 app = FastAPI(
     title="Generic ML Prediction API",
-    version="1.0.0"
+    version="1.0.0",
+    description=f"""
+API de prédiction du projet MLOps.
+
+Liens utiles :
+- [Documentation Swagger](/docs)
+- [Interface Streamlit]({STREAMLIT_URL})
+"""
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -28,6 +37,15 @@ with open(ARTIFACTS_DIR / "metrics.json", "r", encoding="utf-8") as f:
 
 class PredictionInput(BaseModel):
     features: Dict[str, Any] = Field(..., description="Variables d'entrée du modèle")
+
+
+@app.get("/")
+def root():
+    return {
+        "message": "API MLOps TP",
+        "docs": "/docs",
+        "streamlit_url": STREAMLIT_URL
+    }
 
 
 @app.get("/health")

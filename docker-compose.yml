@@ -10,19 +10,20 @@ services:
       # en local dev
       #- "8000:8000"
     environment:
-      PYTHONPATH: /app/src
+      PYTHONPATH: ${PYTHONPATH:-/app/src}
       # ajout de PORT pour que l'API puisse le lire au démarrage
-      PORT: 8000
+      PORT: ${PORT:-8000}
+      STREAMLIT_URL: ${STREAMLIT_URL:-http://localhost:8501}
 
   streamlit:
     build: .
     container_name: mlops_tp_streamlit
     ports:
-      - "8501:8501"
+      - "${STREAMLIT_PORT:-8501}:8501"
     environment:
-      PYTHONPATH: /app/src
-      DEFAULT_DATA_PATH: /app/data/synthetic_freelance_jobs.csv
-      API_BASE_URL: http://api:8000
+      PYTHONPATH: ${PYTHONPATH:-/app/src}
+      DEFAULT_DATA_PATH: ${DEFAULT_DATA_PATH:-/app/data/synthetic_freelance_jobs.csv}
+      API_BASE_URL: ${API_BASE_URL:-http://api:8000}
     depends_on:
       - api
     command: streamlit run /app/src/mlops_tp/streamlit/appStreamlit.py --server.address 0.0.0.0 --server.port 8501
